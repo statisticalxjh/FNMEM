@@ -16,12 +16,7 @@ source("SCB.R")
 #library(RcppArmadillo)
 #sourceCpp("SCB.cpp")
 
-# Hints
-# 1. If you want to speed up and have compilers such as Rtools or gcc, do not source "Kh.R" and "SCB.R", source "SCB.cpp" instead.
-# 2. To run as fast as possible, all the variables are declared with fixed sizes. If you want to change the parameters,
-#    please make corresponding modification in "SCB.cpp". Alternatively you can use the commented code instead, which will declare
-#    the variables corresponding to the parameters automaticly, but may be a little slower.
-# 3. If you want to change the nonlinear function, you have to make corresponding modification in "SCB.cpp".
+
 set.seed(20221207)
 #################### set parameters ####################
 p <- 2                   	    		#dimension of fixed effects
@@ -184,30 +179,4 @@ CP
 
 time.end<-proc.time()
 time.end-time.begin
-
-#################### plot of SCB ####################
-par(mfcol=c(length(alpha),p))
-tit <- c(expression(beta["1"]), "", expression(beta["2"]), "")
-xlab <- c("", "s", "", "s" )
-ylab <- c("95% SCB", "99% SCB", "", "")
-xaxt <- c("n", "s", "n", "s")
-yaxt <- c("s", "s", "n", "n")
-gap <- list(c(1, 4, 2, 0), c(4, 4, 0, 0), c(1, 1, 2, 3), c(4, 1, 0, 3))
-L.beta.hat <- U.beta.hat <- matrix(0, length(alpha), M)
-temp <- 0
-for (i in 1:p){  
-  for (j in 1:length(alpha)){
-    temp <- temp + 1
-    par(mar=gap[[temp]])
-    for (m in 1:M){		
-      L.beta.hat[j, m] <- beta.hat.unbias[i, m] - C[i, j]
-      U.beta.hat[j, m] <- beta.hat.unbias[i, m] + C[i, j]
-    }
-    plot(t, beta[i, ], col=1, xlab=xlab[temp], ylab=ylab[temp], xaxt=xaxt[temp], yaxt=yaxt[temp], ylim=c(-0.1, 0.6), main=tit[temp], type="l")
-    lines(t, beta.hat.smooth[i, ], lwd=2, col=3)
-    lines(t, L.beta.hat[j, ], lwd=2, lty=2, col=2)
-    lines(t, U.beta.hat[j, ], lwd=2, lty=2, col=2) 
-  }
-}
-
 
